@@ -162,9 +162,8 @@ except Exception as e:
 # =============================
 @app.route("/")
 def index():
-    print("🌐 Home route accessed")
-    return "HeartGuard is running ✅"
-
+    print("🌐 Index page loaded")
+    return render_template("index.html")
 
 # =============================
 # RUN APP
