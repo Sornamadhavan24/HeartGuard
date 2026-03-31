@@ -175,12 +175,12 @@ def index():
 
 @app.route("/login")
 def login():
-    return "<h1>Login Page</h1>"   # later replace with login.html
+    return render_template("login.html")
 
 
 @app.route("/register")
 def register():
-    return "<h1>Register Page</h1>"  # later replace with register.html
+   return render_template("register.html")
 
 
 # =============================
@@ -189,7 +189,7 @@ def register():
 
 @app.route("/contact")
 def contact():
-    return "<h1>Contact Page</h1>"  # later replace with contact.html
+    return render_template("contact.html")
 # =============================
 # RUN APP
 # =============================
