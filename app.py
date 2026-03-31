@@ -173,15 +173,19 @@ def index():
 # AUTH ROUTES
 # =============================
 
-@app.route("/login")
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        # handle login logic
+        return "Login Success"   # temporary
     return render_template("login.html")
-
-
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-   return render_template("register.html")
-
+    if request.method == "POST":
+        # handle register logic
+        return "Register Success"
+    return render_template("register.html")
 
 # =============================
 # CONTACT ROUTE
