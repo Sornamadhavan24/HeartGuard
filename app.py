@@ -169,10 +169,27 @@ def index():
     print("📄 Template exists:", os.path.exists(template_path))
 
     return render_template("index.html")
+# =============================
+# AUTH ROUTES
+# =============================
+
+@app.route("/login")
+def login():
+    return "<h1>Login Page</h1>"   # later replace with login.html
+
+
+@app.route("/register")
+def register():
+    return "<h1>Register Page</h1>"  # later replace with register.html
+
+
+# =============================
+# CONTACT ROUTE
+# =============================
+
 @app.route("/contact")
 def contact():
-    return render_template("contact.html")
-
+    return "<h1>Contact Page</h1>"  # later replace with contact.html
 # =============================
 # RUN APP
 # =============================
