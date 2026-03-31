@@ -31,7 +31,8 @@ app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    raise ValueError("DATABASE_URL is not set. Please configure it in Render.")
+    # fallback for local + render (no DB)
+    DATABASE_URL = "sqlite:///" + os.path.join(BASE_DIR, "app.db")
 
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://")
