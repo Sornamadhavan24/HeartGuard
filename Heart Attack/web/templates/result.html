@@ -1,0 +1,414 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ===== CENTER WRAPPER ===== */
+.result-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  min-height: 100vh;
+}
+
+/* ===== CARD ===== */
+.card {
+  width: 900px;
+  max-width: 98%;
+  padding: 50px;
+  border-radius: 20px;
+  background: var(--bg-card);
+  border: 1px solid #e1e8f0;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    position: relative;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.progress-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #e1e8f0;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.progress-step {
+    width: 45px;
+    height: 45px;
+    background: #fff;
+    border: 3px solid #e1e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    font-weight: 700;
+    color: var(--text-dim);
+    transition: var(--transition);
+}
+
+.progress-step.active {
+    border-color: var(--secondary);
+    background: var(--secondary);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.step-label {
+    position: absolute;
+    top: 55px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    white-space: nowrap;
+    transform: translateX(-50%);
+    left: 50%;
+}
+
+.step-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ===== TITLES ===== */
+.card h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: var(--text-main);
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+/* ===== RISK HEADER ===== */
+.risk-header {
+    background: #f8fbff;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    border: 1px solid #e1e8f0;
+    margin-bottom: 40px;
+}
+
+.risk-badge {
+  display: inline-block;
+  font-size: 1.4rem;
+  font-weight: 800;
+  padding: 10px 30px;
+  border-radius: 50px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.low { background: #e6fcf5; color: #0ca678; }
+.medium { background: #fff9db; color: #f08c00; }
+.high { background: #fff5f5; color: #fa5252; }
+.veryhigh { background: #fa5252; color: #fff; }
+
+.confidence {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+/* ===== RESULT PAGES ===== */
+.result-page {
+    display: none;
+    animation: slideIn 0.4s ease-out;
+}
+
+.result-page.active {
+    display: block;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.section-title {
+  margin-top: 20px;
+  margin-bottom: 25px;
+  color: var(--secondary);
+  font-weight: 700;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ===== GRID FOR DATA ===== */
+.data-grid {
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    gap: 20px;
+}
+
+.data-box {
+    background: #fdfdfe;
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid #e1e8f0;
+}
+
+.data-box h5 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 15px;
+    border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 8px;
+}
+
+.data-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.data-item span {
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* ===== LIST STYLE ===== */
+ul { list-style: none; }
+
+li {
+  background: #ffffff;
+  padding: 16px 20px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  border: 1px solid #e1e8f0;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: var(--transition);
+}
+
+li:hover {
+  border-color: var(--primary);
+  transform: translateX(8px);
+  background: #f8fbff;
+}
+
+li::before {
+    content: '\f058';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: var(--primary);
+}
+
+/* ===== NAVIGATION ===== */
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid #e1e8f0;
+}
+
+.btn-nav {
+    padding: 14px 30px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 140px;
+    justify-content: center;
+}
+
+.btn-prev { background: #f1f3f5; color: #495057; }
+.btn-prev:hover { background: #e9ecef; }
+
+.btn-next { background: var(--secondary); color: #fff; }
+.btn-next:hover { background: #0056b3; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2); }
+
+.btn-download { background: var(--primary); color: #fff; }
+.btn-download:hover { background: #22b371; box-shadow: 0 4px 15px rgba(45, 206, 152, 0.2); }
+
+/* ===== PRINT OVERRIDES ===== */
+@media print {
+    .sidebar, .topbar, .nav-buttons, .progress-container, .btn-nav {
+        display: none !important;
+    }
+    .main-content { margin: 0 !important; padding: 0 !important; }
+    .card { box-shadow: none !important; border: none !important; width: 100% !important; padding: 0 !important; }
+    .result-page { display: block !important; opacity: 1 !important; transform: none !important; margin-bottom: 40px; page-break-after: always; }
+    .result-page:last-child { page-break-after: auto; }
+    body { background: #fff !important; }
+    .risk-header { border: 1px solid #000; }
+}
+
+</style>
+
+<div class="result-wrapper">
+<div class="card">
+
+    <div class="progress-container">
+        <div class="step-item">
+            <div class="progress-step active" id="step-dot-1">1</div>
+            <span class="step-label">Input Data</span>
+        </div>
+        <div class="step-item">
+            <div class="progress-step" id="step-dot-2">2</div>
+            <span class="step-label">Lifestyle</span>
+        </div>
+        <div class="step-item">
+            <div class="progress-step" id="step-dot-3">3</div>
+            <span class="step-label">Doctor</span>
+        </div>
+    </div>
+
+    <h2>Heart Disease Risk Assessment</h2>
+
+    <div class="risk-header">
+        <div class="risk-badge 
+            {% if risk == 'LOW' %}low
+            {% elif risk == 'MEDIUM' %}medium
+            {% elif risk == 'HIGH' %}high
+            {% else %}veryhigh
+            {% endif %}
+        ">
+            {{ risk }} RISK
+        </div>
+        <div class="confidence">
+            Probability: {{ probability }}%
+        </div>
+        <div style="margin-top: 15px; font-size: 0.85rem; color: var(--text-dim);">
+            Patient: <strong>{{ current_user.name }}</strong> | ID: #PRD-{{ current_user.id }}{{ now.strftime('%y%m') }}
+        </div>
+    </div>
+
+    <!-- PAGE 1: INPUT DATA -->
+    <div class="result-page active" id="page-1">
+        <div class="section-title"><i class="fa-solid fa-clipboard-check"></i> 1. Your Medical Input Data</div>
+        <div class="data-grid">
+            <div class="data-box">
+                <h5>Demographics & Habits</h5>
+                <div class="data-item">Name: <span>{{ user_data.name }}</span></div>    
+                <div class="data-item">Age: <span>{{ user_data.age }}</span></div>
+                <div class="data-item">Sex: <span>{{ 'Male' if user_data.sex == '1' else 'Female' }}</span></div>
+                <div class="data-item">Smoker: <span>{{ 'Yes' if user_data.Smoker == '1' else 'No' }}</span></div>
+                <div class="data-item">sudden Weight Loss: <span>{{ 'Yes' if user_data.Sudden_Weight_Loss == '1' else 'No' }}</span></div>
+            </div>
+            <div class="data-box">
+                <h5>Lifestyle Metrics</h5>
+                <div class="data-item">Exercise: <span>{{ user_data.Exercise }} hrs/wk</span></div>
+                <div class="data-item">Stress Level: <span>{{ user_data.Stress_Level }}/10</span></div>
+                <div class="data-item">Daily Steps: <span>{{ user_data.step_count_stress }}</span></div>
+                <div class="data-item">Alcohol Use: <span>{{ 'Yes' if user_data.Alcohol == '1' else 'No' }}</span></div>
+            </div>
+            <div class="data-box">
+                <h5>Clinical Readings</h5>
+                <div class="data-item">Blood Pressure: <span>{{ user_data.trestbps }}</span></div>
+                <div class="data-item">Cholesterol: <span>{{ user_data.chol }}</span></div>
+                <div class="data-item">Heart Rate: <span>{{ user_data.thalach }}</span></div>
+                <div class="data-item">ST Depression: <span>{{ user_data.oldpeak }}</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: LIFESTYLE INSTRUCTIONS -->
+    <div class="result-page" id="page-2">
+        <div class="section-title"><i class="fa-solid fa-person-walking"></i> 2. Lifestyle Path For Improvement</div>
+        <ul>
+            {% for tip in tips %}
+                <li>{{ tip }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- PAGE 3: DOCTOR CONSULTATION -->
+    <div class="result-page" id="page-3">
+        <div class="section-title"><i class="fa-solid fa-user-doctor"></i> 3. Clinical Consultation Path</div>
+        <ul>
+            {% for d in doctor %}
+                <li>{{ d }}</li>
+            {% endfor %}
+        </ul>
+        <div style="background: #fff9db; padding: 20px; border-radius: 12px; margin-top: 30px; font-weight: 500; color: #856404; font-size: 0.9rem; border: 1px dashed #f08c00;">
+            <i class="fa-solid fa-triangle-exclamation"></i> NOTE: This is an AI-generated risk assessment. Please share the downloaded PDF with your healthcare provider for formal validation.
+        </div>
+    </div>
+
+    <!-- NAVIGATION BUTTONS -->
+    <div class="nav-buttons">
+        <button class="btn-nav btn-prev" id="prevBtn" onclick="changePage(-1)" style="visibility: hidden;">
+            <i class="fa-solid fa-arrow-left"></i> Previous
+        </button>
+        <div style="display: flex; gap: 15px;">
+            <button class="btn-nav btn-download" onclick="window.print()">
+                <i class="fa-solid fa-file-pdf"></i> Download Result
+            </button>
+            <button class="btn-nav btn-next" id="nextBtn" onclick="changePage(1)" >
+                Lifestyle Section <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <a href="{{ url_for('dashboard') }}" id="finishBtn" class="btn-nav btn-next" style="display: none; text-decoration: none;">
+                Close Report <i class="fa-solid fa-check"></i>
+            </a>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script>
+let currentPage = 1;
+const totalPages = 3;
+
+function changePage(direction) {
+    // Hide current
+    document.getElementById(`page-${currentPage}`).classList.remove('active');
+    document.getElementById(`step-dot-${currentPage}`).classList.remove('active');
+    
+    currentPage += direction;
+    
+    // Show new
+    document.getElementById(`page-${currentPage}`).classList.add('active');
+    document.getElementById(`step-dot-${currentPage}`).classList.add('active');
+
+    // Button visibility
+    document.getElementById('prevBtn').style.visibility = currentPage === 1 ? 'hidden' : 'visible';
+    
+    if (currentPage === totalPages) {
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('finishBtn').style.display = 'flex';
+    } else {
+        document.getElementById('nextBtn').style.display = 'flex';
+        document.getElementById('finishBtn').style.display = 'none';
+        
+        // Update button text based on destination
+        const nextBtn = document.getElementById('nextBtn');
+        if (currentPage === 1) {
+            nextBtn.innerHTML = 'Lifestyle Section <i class="fa-solid fa-arrow-right"></i>';
+        } else if (currentPage === 2) {
+            nextBtn.innerHTML = 'Doctor Section <i class="fa-solid fa-arrow-right"></i>';
+        }
+    }
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ===== AUTH WRAPPER ===== */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: radial-gradient(circle at 50% 50%, #fff 0%, #f0f7ff 100%);
+    perspective: 1500px;
+    padding: 20px;
+}
+
+/* ===== 3D CARD CONTAINER ===== */
+.flip-card {
+    width: 100%;
+    max-width: 500px;
+    height: 750px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.flip-card.flipped {
+    transform: rotateY(180deg);
+}
+
+/* ===== FRONT & BACK FACES ===== */
+.auth-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    background: #fff;
+    border-radius: 30px;
+    padding: 60px 50px;
+    box-shadow: 0 40px 80px rgba(0, 123, 255, 0.1);
+    border: 1px solid #e1e8f0;
+    display: flex;
+    flex-direction: column;
+}
+
+.register-face {
+    transform: rotateY(180deg);
+}
+
+/* ===== SHARED STYLES ===== */
+.logo-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.logo-header i {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.logo-header h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.sub-title {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    margin-bottom: 35px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    margin-top: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 15px 18px;
+    border: 1px solid #e1e8f0;
+    border-radius: 12px;
+    background: #f8fbff;
+    color: var(--text-main);
+    outline: none;
+    transition: var(--transition);
+}
+
+input:focus {
+    border-color: var(--secondary);
+    background: #fff;
+}
+
+.p-hint {
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 5px;
+}
+
+/* ===== BUTTONS ===== */
+button[type="submit"] {
+    width: 100%;
+    padding: 16px;
+    background: var(--secondary);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 40px;
+    transition: var(--transition);
+}
+
+button[type="submit"]:hover {
+    background: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.2);
+}
+
+.toggle-btn {
+    margin-top: 40px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 1rem;
+    padding-bottom: 20px;
+}
+
+.toggle-link {
+    color: var(--secondary);
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: var(--transition);
+}
+
+.toggle-link:hover {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+}
+
+.back-home {
+    position: fixed;
+    top: 40px;
+    left: 40px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+</style>
+
+<div class="auth-page">
+    <a href="/" class="back-home"><i class="fa-solid fa-arrow-left"></i> Back to Site</a>
+
+    <div class="flip-card {% if mode == 'register' %}flipped{% endif %}" id="auth-card">
+        
+        <!-- FRONT: LOGIN -->
+        <div class="auth-face login-face">
+            <div class="logo-header">
+                <i class="fa-solid fa-heart-pulse"></i>
+                <h2>Portal Login</h2>
+            </div>
+            <p class="sub-title">Sign in to access your secure cardiac reports and AI history dashboard.</p>
+
+            <form method="POST" action="{{ url_for('login') }}">
+                <label>Institutional Email</label>
+                <input name="email" type="email" placeholder="email@example.com" required>
+
+                <label>Secure Password</label>
+                <input name="password" type="password" placeholder="••••••••" required>
+                
+                <button type="submit">Access Intelligence</button>
+
+                <div class="toggle-btn">
+                    Don't have an account? <span class="toggle-link" onclick="toggleAuth()">Register now</span>
+                </div>
+            </form>
+        </div>
+
+        <!-- BACK: REGISTER -->
+        <div class="auth-face register-face">
+            <div class="logo-header">
+                <i class="fa-solid fa-user-plus"></i>
+                <h2>Register Account</h2>
+            </div>
+            <p class="sub-title">Establish your secure account and begin high-fidelity cardiac risk monitoring.</p>
+
+            <form method="POST" action="{{ url_for('register') }}">
+                <label>Full Name</label>
+                <input name="name" type="text" placeholder="John Doe" required>
+
+                <label>Email Address</label>
+                <input name="email" type="email" placeholder="john@example.com" required>
+
+                <label>Create Secure Password</label>
+                <input name="password" type="password" placeholder="At least 8 chars" required>
+                
+                <button type="submit">Initialize Identity</button>
+
+                <div class="toggle-btn">
+                    Already a member? <span class="toggle-link" onclick="toggleAuth()">Login Now</span>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function toggleAuth() {
+    const card = document.getElementById('auth-card');
+    card.classList.toggle('flipped');
+}
+</script>
+
+{% endblock %}

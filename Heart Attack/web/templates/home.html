@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .home-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .welcome-card {
+        background: #fff;
+        padding: 60px;
+        border-radius: 24px;
+        border: 1px solid #e1e8f0;
+        max-width: 900px;
+        text-align: center;
+        box-shadow: var(--shadow-md);
+        margin-bottom: 50px;
+    }
+
+    .welcome-card i {
+        font-size: 3.5rem;
+        color: var(--primary);
+        margin-bottom: 25px;
+    }
+
+    .welcome-card h2 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        color: var(--text-main);
+    }
+
+    .welcome-card p {
+        font-size: 1.15rem;
+        color: var(--text-dim);
+        line-height: 1.8;
+    }
+
+    .launch-btn {
+        display: inline-block;
+        margin-top: 40px;
+        padding: 16px 45px;
+        background: var(--secondary);
+        color: #fff;
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 50px;
+        transition: var(--transition);
+    }
+
+    .launch-btn:hover {
+        background: #0056b3;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 123, 255, 0.2);
+    }
+
+    .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 30px;
+        max-width: 1100px;
+        width: 100%;
+    }
+
+    .step-card {
+        background: #fff;
+        padding: 40px 30px;
+        border-radius: 20px;
+        border: 1px solid #e1e8f0;
+        text-align: center;
+        transition: var(--transition);
+    }
+
+    .step-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .step-card i {
+        font-size: 2.5rem;
+        color: var(--secondary);
+        margin-bottom: 20px;
+    }
+
+    .step-title {
+        font-weight: 700;
+        margin-bottom: 12px;
+        font-size: 1.25rem;
+    }
+
+    .step-desc {
+        color: var(--text-dim);
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .feature-card-small {
+        background: #fff;
+        padding: 30px 20px;
+        border-radius: 20px;
+        border: 1px solid #e1e8f0;
+        text-align: center;
+        transition: var(--transition);
+    }
+
+    .feature-card-small:hover {
+        transform: scale(1.03);
+        border-color: var(--accent);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .feature-card-small i {
+        font-size: 2rem;
+        color: var(--secondary);
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="home-wrapper">
+    <div class="welcome-card">
+        <i class="fa-solid fa-heart-pulse"></i>
+        <h2>Welcome to HeartGuard AI</h2>
+        <p>Your comprehensive intelligence portal for cardiovascular risk assessment. We utilize cutting-edge AI to
+            unify your clinical metrics and lifestyle patterns into actionable health reports.</p>
+        <a href="{{ url_for('dashboard') }}" class="launch-btn">Proceed to Dashboard</a>
+    </div>
+
+    <h3 style="margin-bottom: 40px; font-weight: 800; font-size: 1.8rem;">Platform Experience</h3>
+    <div class="steps-grid">
+        <div class="step-card">
+            <i class="fa-solid fa-vial-circle-check"></i>
+            <div class="step-title">1. Data Ingestion</div>
+            <div class="step-desc">Input your latest clinical data and lifestyle behavior patterns.</div>
+        </div>
+        <div class="step-card">
+            <i class="fa-solid fa-gears"></i>
+            <div class="step-title">2. AI Synthesis</div>
+            <div class="step-desc">Our neutral network processes your risk signature against global benchmarks.</div>
+        </div>
+        <div class="step-card">
+            <i class="fa-solid fa-file-medical"></i>
+            <div class="step-title">3. Actionable Report</div>
+            <div class="step-desc">Download a multi-page PDF with lifestyle and clinical pathways.</div>
+        </div>
+        <div class="step-card">
+            <i class="fa-solid fa-user-md"></i>
+            <div class="step-title">4. Clinical Support</div>
+            <div class="step-desc">Connect with specialists or chat with support to understand your risks.</div>
+        </div>
+    </div>
+
+    <h3 style="margin-top: 80px; margin-bottom: 40px; font-weight: 800; font-size: 1.8rem;">Core Capabilities</h3>
+    <div class="steps-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+        <div class="feature-card-small">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <div class="step-title" style="font-size: 1.1rem;">History Tracking</div>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Monitor your heart health progress over time with
+                stored results.</p>
+        </div>
+        <div class="feature-card-small">
+            <i class="fa-solid fa-comments"></i>
+            <div class="step-title" style="font-size: 1.1rem;">Expert Chat</div>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Direct access to support and medical guidance portals.
+            </p>
+        </div>
+        <div class="feature-card-small">
+            <i class="fa-solid fa-shield-virus"></i>
+            <div class="step-title" style="font-size: 1.1rem;">Secure Storage</div>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Your medical data is encrypted and completely private.
+            </p>
+        </div>
+        <div class="feature-card-small">
+            <i class="fa-solid fa-bell"></i>
+            <div class="step-title" style="font-size: 1.1rem;">Health Alerts</div>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Receive notifications for regular checkups and risk
+                warnings.</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

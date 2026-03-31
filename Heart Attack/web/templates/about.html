@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #333;
+}
+.page-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+.content-box {
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+}
+</style>
+
+<div class="page-header">
+    <h2>About Us</h2>
+</div>
+
+<div class="content-box">
+    <p>
+        This platform represents state-of-the-art methodology in predictive healthcare, offering an End-to-End Machine Learning Framework for Lifestyle-Based Health Risk Prediction.
+    </p>
+    <br/>
+    <p>
+        Our goal is to assist individuals in identifying potential heart risks early, using logical severity models combined with lifestyle factors. The analytics provided here should be used alongside professional medical consultations.
+    </p>
+</div>
+
+{% endblock %}

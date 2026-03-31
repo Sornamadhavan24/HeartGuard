@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ===== CARD ===== */
+.card {
+  width: 1000px;
+  max-width: 95%;
+  margin: 60px auto;
+  padding: 40px;
+  border-radius: 15px;
+  background: #fff;
+  border: 1px solid #eee;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.card h2 {
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* ===== TABLE WRAPPER (CENTER) ===== */
+.table-wrapper {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+/* ===== TABLE STYLE ===== */
+table {
+  width: 90%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* HEADER */
+th {
+  background: #007bff;
+  color: #fff;
+  padding: 15px;
+  font-weight: 600;
+}
+
+/* ROWS */
+td {
+  padding: 12px;
+  border-bottom: 1px solid #f1f1f1;
+  color: #555;
+  background: #fff;
+}
+
+/* Hover Effect */
+tr:hover td {
+  background: #f8f9fa;
+  transition: 0.3s;
+}
+
+/* Risk Color Tags */
+.high { color: #dc3545; font-weight: bold; }
+.medium { color: #ffc107; font-weight: bold; }
+.low { color: #28a745; font-weight: bold; }
+.veryhigh { color: #842029; font-weight: bold; }
+
+/* Responsive */
+@media(max-width:768px){
+  table { width: 100%; }
+}
+</style>
+
+<div class="card">
+  <h2>Prediction History</h2>
+
+  {% if records %}
+  <div class="table-wrapper">
+    <table>
+      <tr>
+        <th>Date</th>
+        <th>Risk Level</th>
+        <th>Risk Percentage</th>
+      </tr>
+
+      {% for r in records %}
+      <tr>
+        <td>{{ r.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+
+        <td class="
+          {% if r.predicted_risk == 'HIGH' %}high
+          {% elif r.predicted_risk == 'MEDIUM' %}medium
+          {% elif r.predicted_risk == 'LOW' %}low
+          {% elif r.predicted_risk == 'VERY HIGH' %}veryhigh
+          {% endif %}
+        ">
+          {{ r.predicted_risk }}
+        </td>
+
+        <td>
+          {% if r.probability %}
+            {{ r.probability }}%
+          {% else %}
+            -
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  {% else %}
+    <p style="color:#555">No prediction history available.</p>
+  {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #333;
+}
+.page-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+.form-box {
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    max-width: 600px;
+    margin: 0 auto;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+.form-group textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 150px;
+}
+.form-group textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0,123,255,0.2);
+}
+.submit-btn {
+    padding: 12px 30px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+.submit-btn:hover {
+    background: #0056b3;
+}
+</style>
+
+<div class="page-header">
+    <h2>Submit Feedback</h2>
+</div>
+
+<div class="form-box">
+    <form method="POST" action="{{ url_for('feedback') }}">
+        <div class="form-group">
+            <label for="message">Your Feedback</label>
+            <textarea name="message" id="message" required placeholder="Tell us what you think or what features you'd like to see..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Submit Feedback</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #333;
+}
+.page-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+.content-box {
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+    text-align: center;
+}
+.contact-info {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #333;
+}
+</style>
+
+<div class="page-header">
+    <h2>Contact Us</h2>
+</div>
+
+<div class="content-box">
+    <p>Have questions, suggestions, or need assistance?</p>
+    <p>Feel free to reach out to our support team.</p>
+    
+    <div class="contact-info">
+        <p>Email: support@heartriskprediction.com</p>
+        <p>Phone: +1 (555) 123-4567</p>
+    </div>
+</div>
+
+{% endblock %}

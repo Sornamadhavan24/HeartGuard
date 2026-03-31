@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.dashboard-card {
+  width: 1000px;
+  max-width: 98%;
+  margin: auto;
+  padding: 50px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #e1e8f0;
+  box-shadow: var(--shadow-md);
+}
+
+.dashboard-card h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  color: var(--text-main);
+  font-weight: 800;
+  font-size: 2rem;
+}
+
+/* ===== GRID LAYOUT ===== */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.section-header {
+  grid-column: span 3;
+  margin-top: 30px;
+  margin-bottom: 5px;
+  font-weight: 800;
+  color: var(--secondary);
+  border-bottom: 2px solid #f8fbff;
+  padding-bottom: 10px;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ===== LABEL ===== */
+label {
+  margin-bottom: 10px;
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ===== INPUTS ===== */
+input, select {
+  padding: 14px 18px;
+  border: 1px solid #e1e8f0;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--text-main);
+  outline: none;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+input:focus, select:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+}
+
+/* Visual cue for required fields */
+input:invalid:not(:placeholder-shown), 
+select:invalid {
+  border-color: #ff4d4d;
+}
+
+input:valid:not(:placeholder-shown),
+select:valid:not([value=""]) {
+  border-color: var(--primary);
+}
+
+/* ===== BUTTONS ===== */
+.btn-submit {
+  padding: 16px 50px;
+  border: none;
+  border-radius: 50px;
+  background: var(--secondary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-submit:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 123, 255, 0.2);
+}
+
+.btn-view {
+  display: inline-block;
+  padding: 16px 40px;
+  border-radius: 50px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition);
+  margin-left: 15px;
+}
+
+.btn-view:hover {
+  background: #22b371;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(45, 206, 152, 0.2);
+}
+
+@media(max-width: 992px) {
+  .form-grid { grid-template-columns: repeat(2, 1fr); }
+  .section-header { grid-column: span 2; }
+}
+
+@media(max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .section-header { grid-column: span 1; }
+}
+</style>
+
+<div class="dashboard-card">
+  <h2>Risk Analytics Engine</h2>
+
+  <form method="POST" action="{{ url_for('predict') }}" class="form-grid">
+
+    <div class="section-header"><i class="fa-solid fa-id-card"></i> 1. Demographic Profile</div>
+     
+    <div class="form-group">
+      <label>Patient Name</label>
+      <input type="text" name="name" placeholder="Full Name" required>
+    </div>  
+    
+    <div class="form-group">
+      <label>Patient Age</label>
+      <input type="number" name="age" placeholder="Years" required>
+    </div>
+
+    <div class="form-group">
+      <label>Gender</label>
+      <select name="sex" required>
+        <option value="" disabled selected>Select Gender</option>
+        <option value="1">Male</option>
+        <option value="0">Female</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Smoker Status</label>
+      <select name="Smoker" required>
+        <option value="" disabled selected>Select Status</option>
+        <option value="0">Non-Smoker</option>
+        <option value="1">Active Smoker</option>
+      </select>
+    </div>
+
+    <div class="section-header"><i class="fa-solid fa-person-running"></i> 2. Lifestyle Parameters</div>
+
+    <div class="form-group">
+      <label>Physical Activity (Hrs/Wk)</label>
+      <input type="number" step="0.1" name="Exercise" placeholder="e.g. 3.5" required>
+    </div>
+
+    <div class="form-group">
+      <label>Stress Level (0-10)</label>
+      <input type="number" min="0" max="10" name="Stress_Level" placeholder="Current level" required>
+    </div>
+
+    <div class="form-group">
+      <label>Avg Daily Steps</label>
+      <input type="number" name="step_count_stress" placeholder="e.g. 8000" required>
+    </div>
+
+    <div class="form-group">
+      <label>Alcohol Frequency</label>
+      <select name="Alcohol" required>
+        <option value="" disabled selected>Select Frequency</option>
+        <option value="0">None/Rare</option>
+        <option value="1">Occasional/Regular</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Dietary Habit</label>
+      <select name="Food" required>
+        <option value="" disabled selected>Select Habit</option>
+        <option value="balanced">Balanced Diet</option>
+        <option value="high-fat">High Fat Intake</option>
+        <option value="low-salt">Low Salt/Cardiac</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+        <label>Recent Weight Change</label>
+        <select name="Sudden_Weight_Loss" required>
+          <option value="" disabled selected>Select Change</option>
+          <option value="0">Stable</option>
+          <option value="1">Sudden Loss</option>
+        </select>
+      </div>
+
+    <div class="section-header"><i class="fa-solid fa-stethoscope"></i> 3. Clinical Indicators</div>
+
+    <div class="form-group">
+      <label>Chest Pain Symptom</label>
+      <select name="cp" required>
+        <option value="" disabled selected>Select Symptom</option>
+        <option value="0">None (Typical)</option>
+        <option value="1">Mild (Atypical)</option>
+        <option value="2">Moderate (Non-anginal)</option>
+        <option value="3">Severe (Asymptomatic)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Resting Blood Pressure</label>
+      <input type="number" name="trestbps" placeholder="mmHg" required>
+    </div>
+
+    <div class="form-group">
+      <label>Serum Cholesterol</label>
+      <input type="number" name="chol" placeholder="mg/dl" required>
+    </div>
+
+    <div class="form-group">
+      <label>Max Heart Rate Achieved</label>
+      <input type="number" name="thalach" placeholder="bpm" required>
+    </div>
+
+    <div class="form-group">
+      <label>ST Depression (Oldpeak)</label>
+      <input type="number" step="0.1" name="oldpeak" placeholder="Numeric value" required>
+    </div>
+
+    <div style="grid-column: 1 / -1; text-align: center; margin-top: 40px; padding-top:20px; border-top: 1px solid #f8fbff;">
+      <button type="submit" class="btn-submit">Generate High-Fidelity Prediction</button>
+      
+      {% if has_prediction %}
+        <a href="{{ url_for('result_page') }}" class="btn-view">
+          <i class="fa-solid fa-file-circle-check"></i> View Latest Report
+        </a>
+      {% endif %}
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}

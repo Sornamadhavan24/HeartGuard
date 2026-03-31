@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ===== CENTER WRAPPER ===== */
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 60px 20px;
+  background: var(--bg-light);
+}
+
+/* ===== CARD STYLE ===== */
+.card {
+  width: 100%;
+  max-width: 520px;
+  padding: 60px 50px;
+  background: #ffffff;
+  border: 1px solid #e1e8f0;
+  border-radius: 24px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.logo-header i {
+  font-size: 3rem;
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+.logo-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.sub-title {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 40px;
+}
+
+/* ===== FORM ===== */
+form { text-align: left; }
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  margin-top: 15px;
+}
+
+input {
+  width: 100%;
+  padding: 14px 18px;
+  background: #fff;
+  border: 1px solid #e1e8f0;
+  border-radius: 12px;
+  color: var(--text-main);
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+input:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 16px;
+  background: var(--secondary);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 40px;
+  transition: var(--transition);
+}
+
+button[type="submit"]:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 123, 255, 0.2);
+}
+
+.auth-footer {
+  margin-top: 35px;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+}
+
+.auth-footer a {
+  color: var(--secondary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+</style>
+
+<div class="auth-wrapper">
+  <div class="card">
+    <div class="logo-header">
+      <i class="fa-solid fa-heart-pulse"></i>
+      <h2>Create Account</h2>
+    </div>
+    <p class="sub-title">Sign up for HeartGuard AI and take control of your cardiovascular journey.</p>
+
+    <form method="POST">
+      <label>Full Name</label>
+      <input name="name" type="text" placeholder="John Doe" required autofocus>
+
+      <label>Email Address</label>
+      <input name="email" type="email" placeholder="john@example.com" required>
+
+      <label>Set Secure Password</label>
+      <input name="password" id="reg-password" type="password" placeholder="At least 8 characters" required>
+
+      <button type="submit">Complete Registration</button>
+      
+      <div class="auth-footer">
+        Account ready? <a href="{{ url_for('login') }}">Switch to Login</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
