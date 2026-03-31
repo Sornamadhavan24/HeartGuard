@@ -20,7 +20,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # CONFIG
 # =============================
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "..", "artifacts", "model_pipeline.joblib")
+MODEL_PATH = os.path.join(BASE_DIR, "artifacts", "model_pipeline.joblib")
 
 
 app = Flask(__name__)
