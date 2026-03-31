@@ -173,27 +173,53 @@ def index():
 # AUTH ROUTES
 # =============================
 
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        # handle login logic
-        return "Login Success"   # temporary
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password_hash, password):
+            login_user(user)
+            return redirect(url_for("index"))  # redirect after login
+        else:
+            flash("Invalid email or password")
+            return redirect(url_for("login"))
+
     return render_template("login.html")
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        # handle register logic
-        return "Register Success"
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        hashed = generate_password_hash(password)
+
+        if User.query.filter_by(email=email).first():
+            flash("Email already exists")
+            return redirect(url_for("register"))
+
+        user = User(name=name, email=email, password_hash=hashed)
+        db.session.add(user)
+        db.session.commit()
+
+        flash("Registration successful")
+        return redirect(url_for("login"))
+
     return render_template("register.html")
 
 # =============================
 # CONTACT ROUTE
 # =============================
 
-@app.route("/contact")
-def contact():
-    return render_template("contact.html")
+@app.route("/<page>")
+def render_page(page):
+    try:
+        return render_template(f"{page}.html")
+    except:
+        return "Page not found", 404
 # =============================
 # RUN APP
 # =============================
