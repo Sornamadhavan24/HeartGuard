@@ -163,6 +163,11 @@ except Exception as e:
 @app.route("/")
 def index():
     print("🌐 Index page loaded")
+
+    template_path = os.path.join(BASE_DIR, "web", "templates", "index.html")
+    print("🔍 Template path:", template_path)
+    print("📄 Template exists:", os.path.exists(template_path))
+
     return render_template("index.html")
 
 # =============================
