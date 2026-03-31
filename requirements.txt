@@ -3,7 +3,9 @@ flask_sqlalchemy
 flask_login
 pandas
 numpy
-scikit-learn
+scikit-learn==1.2.2
+joblib==1.2.0
+numpy==1.23.5
 joblib
 gunicorn
 psycopg2-binary
