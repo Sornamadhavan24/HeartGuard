@@ -32,7 +32,7 @@ print("📦 Model exists:", os.path.exists(MODEL_PATH))
 # =============================
 # APP CONFIG
 # =============================
-app = Flask(__name__)
+app = Flask(__name__, template_folder="web/templates")
 
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
 print("🔑 SECRET_KEY loaded")
