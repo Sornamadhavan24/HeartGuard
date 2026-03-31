@@ -280,14 +280,14 @@ footer a:hover {
   
   <nav>
     {% if current_user.is_admin %}
-    <a href="/admin_dashboard" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+    <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
       <i class="fa-solid fa-gauge-high"></i> Admin Dashboard
     </a>
     {% endif %}
     <a href="{{ url_for('home_page') }}" class="{% if request.endpoint == 'home_page' %}active{% endif %}"><i class="fa-solid fa-house"></i> Home</a>
-    <a href="/dashboard" class="{% if request.endpoint == 'dashboard' %}active{% endif %}"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-    <a href="/result" class="{% if request.endpoint == 'result_page' %}active{% endif %}"><i class="fa-solid fa-square-poll-vertical"></i> Latest Result</a>
-    <a href="/history" class="{% if request.endpoint == 'history' %}active{% endif %}"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
+    <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+    <a href="{{ url_for('result_page') }}" class="{% if request.endpoint == 'result_page' %}active{% endif %}"><i class="fa-solid fa-square-poll-vertical"></i> Latest Result</a>
+    <a href="{{ url_for('history') }}" class="{% if request.endpoint == 'history' %}active{% endif %}"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
     <a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}"><i class="fa-solid fa-circle-info"></i> About</a>
     <a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}"><i class="fa-solid fa-envelope"></i> Contact</a>
     <a href="{{ url_for('feedback') }}" class="{% if request.endpoint == 'feedback' %}active{% endif %}"><i class="fa-solid fa-comment-dots"></i> Feedback</a>
