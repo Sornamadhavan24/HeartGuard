@@ -169,6 +169,9 @@ def index():
     print("📄 Template exists:", os.path.exists(template_path))
 
     return render_template("index.html")
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
 
 # =============================
 # RUN APP
