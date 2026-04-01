@@ -201,6 +201,75 @@ def register():
 
     return render_template("auth.html", mode="register")
 
+@app.route("/predict", methods=["GET", "POST"])
+@login_required
+def predict():
+    if request.method == "POST":
+        try:
+            # Example inputs (match your ML model)
+            age = float(request.form.get("age"))
+            cholesterol = float(request.form.get("cholesterol"))
+            bp = float(request.form.get("bp"))
+
+            # Convert to array
+            input_data = np.array([[age, cholesterol, bp]])
+
+            if pipeline:
+                prediction = pipeline.predict(input_data)[0]
+                prob = pipeline.predict_proba(input_data)[0][1]
+            else:
+                prediction = "Model not loaded"
+                prob = 0.0
+
+            # Save to DB
+            record = Prediction(
+                user_id=current_user.id,
+                inputs_json=json.dumps({
+                    "age": age,
+                    "cholesterol": cholesterol,
+                    "bp": bp
+                }),
+                predicted_risk=str(prediction),
+                probability=float(prob)
+            )
+
+            db.session.add(record)
+            db.session.commit()
+
+            return render_template(
+                "result.html",
+                prediction=prediction,
+                probability=round(prob * 100, 2)
+            )
+
+        except Exception as e:
+            print("Prediction error:", e)
+            flash("Prediction failed", "danger")
+
+    return render_template("predict.html")
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    total_predictions = Prediction.query.filter_by(user_id=current_user.id).count()
+
+    return render_template(
+        "dashboard.html",
+        user=current_user,
+        total_predictions=total_predictions
+    )
+@app.route("/history")
+@login_required
+def history():
+    records = Prediction.query.filter_by(user_id=current_user.id)\
+        .order_by(Prediction.created_at.desc()).all()
+
+    return render_template("history.html", records=records)
+@app.route("/profile")
+@login_required
+def profile():
+    return render_template("profile.html", user=current_user)
+
 
 @app.route("/logout")
 @login_required
