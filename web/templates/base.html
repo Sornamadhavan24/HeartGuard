@@ -278,21 +278,47 @@ footer a:hover {
     HeartGuard<span>AI</span>
   </a>
   
-  <nav>
-    {% if current_user.is_admin %}
-    <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
-      <i class="fa-solid fa-gauge-high"></i> Admin Dashboard
-    </a>
-    {% endif %}
-    <a href="{{ url_for('home_page') }}" class="{% if request.endpoint == 'home_page' %}active{% endif %}"><i class="fa-solid fa-house"></i> Home</a>
-    <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-    <a href="{{ url_for('result_page') }}" class="{% if request.endpoint == 'result_page' %}active{% endif %}"><i class="fa-solid fa-square-poll-vertical"></i> Latest Result</a>
-    <a href="{{ url_for('history') }}" class="{% if request.endpoint == 'history' %}active{% endif %}"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
-    <a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}"><i class="fa-solid fa-circle-info"></i> About</a>
-    <a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}"><i class="fa-solid fa-envelope"></i> Contact</a>
-    <a href="{{ url_for('feedback') }}" class="{% if request.endpoint == 'feedback' %}active{% endif %}"><i class="fa-solid fa-comment-dots"></i> Feedback</a>
-  </nav>
+ <nav>
+  {% if current_user.is_admin %}
+  <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+    <i class="fa-solid fa-gauge-high"></i> Admin Dashboard
+  </a>
+  {% endif %}
 
+  <a href="{{ url_for('home_page') }}" class="{% if request.endpoint == 'home_page' %}active{% endif %}">
+    <i class="fa-solid fa-house"></i> Home
+  </a>
+
+  <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">
+    <i class="fa-solid fa-chart-line"></i> Dashboard
+  </a>
+
+  <!-- NEW -->
+  <a href="{{ url_for('predict') }}" class="{% if request.endpoint == 'predict' %}active{% endif %}">
+    <i class="fa-solid fa-stethoscope"></i> Predict
+  </a>
+
+  <a href="{{ url_for('history') }}" class="{% if request.endpoint == 'history' %}active{% endif %}">
+    <i class="fa-solid fa-clock-rotate-left"></i> History
+  </a>
+
+  <!-- NEW -->
+  <a href="{{ url_for('profile') }}" class="{% if request.endpoint == 'profile' %}active{% endif %}">
+    <i class="fa-solid fa-user"></i> Profile
+  </a>
+
+  <a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">
+    <i class="fa-solid fa-circle-info"></i> About
+  </a>
+
+  <a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">
+    <i class="fa-solid fa-envelope"></i> Contact
+  </a>
+
+  <a href="{{ url_for('feedback') }}" class="{% if request.endpoint == 'feedback' %}active{% endif %}">
+    <i class="fa-solid fa-comment-dots"></i> Feedback
+  </a>
+</nav>
   <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid #eee;">
      <p style="font-size: 0.75rem; color: var(--text-dim); text-align: center;">&copy; 2026 HeartGuard AI</p>
   </div>

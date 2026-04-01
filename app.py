@@ -17,57 +17,39 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 # =============================
-# DEBUG START
-# =============================
-print("🚀 App starting...")
-
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-print("📁 BASE_DIR:", BASE_DIR)
-
-MODEL_PATH = os.path.join(BASE_DIR, "artifacts", "model_pipeline.joblib")
-print("📦 MODEL_PATH:", MODEL_PATH)
-print("📦 Model exists:", os.path.exists(MODEL_PATH))
-
-
-# =============================
 # APP CONFIG
 # =============================
-app = Flask(__name__, template_folder="web/templates", static_folder="web/static")
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+app = Flask(
+    __name__,
+    template_folder="web/templates",
+    static_folder="web/static"
+)
 
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
-print("🔑 SECRET_KEY loaded")
 
-
+# =============================
+# DATABASE CONFIG
+# =============================
 DATABASE_URL = os.getenv("DATABASE_URL")
-print("🌐 Raw DATABASE_URL:", DATABASE_URL)
 
 if not DATABASE_URL:
-    print("⚠️ No DATABASE_URL found, using SQLite fallback")
     DATABASE_URL = "sqlite:///" + os.path.join(BASE_DIR, "app.db")
 
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://")
 
-print("✅ Final DATABASE_URL:", DATABASE_URL)
-
-
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+db = SQLAlchemy(app)
 
 # =============================
-# DB INIT
+# LOGIN MANAGER
 # =============================
-try:
-    db = SQLAlchemy(app)
-    print("✅ Database initialized")
-except Exception as e:
-    print("❌ Database init failed:", e)
-
-
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
-print("✅ Login manager initialized")
 
 
 # =============================
@@ -118,90 +100,156 @@ def load_user(user_id):
 
 
 # =============================
-# CREATE DB TABLES
+# CREATE TABLES
 # =============================
-try:
-    with app.app_context():
-        db.create_all()
-        print("✅ Tables created")
+with app.app_context():
+    db.create_all()
 
-        if not User.query.filter_by(email="admin@gmail.com").first():
-            admin_user = User(
-                name="Admin User",
-                email="admin@gmail.com",
-                password_hash=generate_password_hash("admin123"),
-                is_admin=True
-            )
-            db.session.add(admin_user)
-            db.session.commit()
-            print("✅ Admin user created")
-        else:
-            print("ℹ️ Admin already exists")
-
-except Exception as e:
-    print("❌ DB setup failed:", e)
+    # Create default admin
+    if not User.query.filter_by(email="admin@gmail.com").first():
+        admin = User(
+            name="Admin",
+            email="admin@gmail.com",
+            password_hash=generate_password_hash("admin123"),
+            is_admin=True
+        )
+        db.session.add(admin)
+        db.session.commit()
 
 
 # =============================
-# LOAD MODEL
+# LOAD MODEL (Optional)
 # =============================
-try:
-    if os.path.exists(MODEL_PATH):
-        pipeline = joblib.load(MODEL_PATH)
-        print("✅ Model loaded successfully")
-    else:
-        print("❌ Model file NOT found")
-        pipeline = None
-except Exception as e:
-    print("❌ Model loading failed:", e)
+MODEL_PATH = os.path.join(BASE_DIR, "artifacts", "model_pipeline.joblib")
+
+if os.path.exists(MODEL_PATH):
+    pipeline = joblib.load(MODEL_PATH)
+else:
     pipeline = None
 
 
 # =============================
-# ROUTES (minimal test first)
+# ROUTES
 # =============================
+
+# Home
 @app.route("/")
 def index():
-    print("🌐 Index page loaded")
-
-    template_path = os.path.join(BASE_DIR, "web", "templates", "index.html")
-    print("🔍 Template path:", template_path)
-    print("📄 Template exists:", os.path.exists(template_path))
-
     return render_template("index.html")
+
+
 # =============================
 # AUTH ROUTES
 # =============================
-@app.route("/debug")
-def debug():
-    return {
-        "base_dir": BASE_DIR,
-        "templates_exist": os.path.exists(os.path.join(BASE_DIR, "web", "templates")),
-        "index_exists": os.path.exists(os.path.join(BASE_DIR, "web", "templates", "index.html")),
-        "model_exists": os.path.exists(MODEL_PATH)
-    }
-@app.route("/login")
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("auth.html")  # NOT login.html
+    if request.method == "POST":
+        try:
+            email = request.form.get("email")
+            password = request.form.get("password")
+
+            user = User.query.filter_by(email=email).first()
+
+            if user and check_password_hash(user.password_hash, password):
+                login_user(user)
+
+                # Save login history
+                history = LoginHistory(user_id=user.id)
+                db.session.add(history)
+                db.session.commit()
+
+                flash("Login successful!", "success")
+                return redirect(url_for("index"))
+            else:
+                flash("Invalid email or password", "danger")
+
+        except Exception as e:
+            print("Login error:", e)
+            flash("Something went wrong", "danger")
+
+    return render_template("auth.html", mode="login")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        # handle register logic
-        return "Register Success"
-    return render_template("register.html")
+        try:
+            name = request.form.get("name")
+            email = request.form.get("email")
+            password = request.form.get("password")
+
+            if User.query.filter_by(email=email).first():
+                flash("Email already exists", "warning")
+                return redirect(url_for("register"))
+
+            new_user = User(
+                name=name,
+                email=email,
+                password_hash=generate_password_hash(password)
+            )
+
+            db.session.add(new_user)
+            db.session.commit()
+
+            flash("Registration successful!", "success")
+            return redirect(url_for("login"))
+
+        except Exception as e:
+            print("Register error:", e)
+            flash("Something went wrong", "danger")
+
+    return render_template("auth.html", mode="register")
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("Logged out successfully", "info")
+    return redirect(url_for("index"))
+
 
 # =============================
-# CONTACT ROUTE
+# CONTACT
 # =============================
-
-@app.route("/contact")
+@app.route("/contact", methods=["GET", "POST"])
 def contact():
-    return render_template("contact.html")
+    try:
+        if request.method == "POST":
+            message = request.form.get("message")
+
+            if current_user.is_authenticated:
+                feedback = Feedback(
+                    user_id=current_user.id,
+                    message=message
+                )
+                db.session.add(feedback)
+                db.session.commit()
+
+                flash("Message sent!", "success")
+            else:
+                flash("Please login to send message", "warning")
+
+        return render_template("contact.html")
+
+    except Exception as e:
+        print("Contact error:", e)
+        return "Error loading contact page"
+
+
 # =============================
-# RUN APP
+# PROTECTED DASHBOARD (optional)
+# =============================
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    return f"Welcome {current_user.name}!"
+
+
+# =============================
+# RUN
 # =============================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    print(f"🚀 Starting Flask on port {port}")
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)
