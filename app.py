@@ -32,7 +32,7 @@ print("📦 Model exists:", os.path.exists(MODEL_PATH))
 # =============================
 # APP CONFIG
 # =============================
-app = Flask(__name__, template_folder="web/templates")
+app = Flask(__name__, template_folder="web/templates", static_folder="web/static")
 
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
 print("🔑 SECRET_KEY loaded")
@@ -174,12 +174,9 @@ def index():
 # =============================
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login")
 def login():
-    if request.method == "POST":
-        # handle login logic
-        return "Login Success"   # temporary
-    return render_template("login.html")
+    return render_template("auth.html")  # NOT login.html
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
