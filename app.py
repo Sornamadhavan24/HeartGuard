@@ -172,11 +172,18 @@ def index():
 # =============================
 # AUTH ROUTES
 # =============================
-
-
+@app.route("/debug")
+def debug():
+    return {
+        "base_dir": BASE_DIR,
+        "templates_exist": os.path.exists(os.path.join(BASE_DIR, "web", "templates")),
+        "index_exists": os.path.exists(os.path.join(BASE_DIR, "web", "templates", "index.html")),
+        "model_exists": os.path.exists(MODEL_PATH)
+    }
 @app.route("/login")
 def login():
     return render_template("auth.html")  # NOT login.html
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
